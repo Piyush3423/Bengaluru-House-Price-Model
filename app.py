@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 # Load the trained model
-with open('Benglore_House_Price_model.pickle', 'rb') as f:
+with open('Benglore_House_Price_model.pickle', 'rb') as f: 
     model = pickle.load(f)
 
 # Load the columns used in the model
@@ -16,7 +16,7 @@ st.set_page_config(page_title="Bengaluru House Price Prediction", page_icon="üè
 st.title("Bengaluru House Price Prediction")
 st.write("This app predicts the price of a house in Bengaluru based on various features.")
 
-locations = data_columns[3:] #1st 3 are numerical fearutes so we've left them.
+locations = sorted(data_columns[3:]) #1st 3 are numerical fearutes so we've left them.
 location = st.selectbox("Select Location", locations)
 
 sqft = st.number_input(
@@ -41,4 +41,13 @@ bath = st.number_input(
 )
 
 if st.button("Predict Price"):
-    st.write('Button CLicked')
+    x = np.zeros(len(data_columns))
+    x[0] = sqft
+    x[1] = bath
+    x[2] = bhk
+    loc_idx = data_columns.index(location)
+    x[loc_idx] = 1
+    prediction = model.predict([x])[0]
+    
+    
+    st.success(f"Estimated Price: ‚Çπ {prediction:.2f} Lakhs")
