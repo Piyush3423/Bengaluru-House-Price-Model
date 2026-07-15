@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 # Load the trained model
-with open('Benglore_House_Price_Prediction_Model.pkl', 'rb') as f:
+with open('Benglore_House_Price_model.pickle', 'rb') as f:
     model = pickle.load(f)
 
 # Load the columns used in the model
