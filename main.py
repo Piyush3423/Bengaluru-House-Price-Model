@@ -1,11 +1,20 @@
 import pickle
 import json
 import numpy as np
-from fastapi import FastAPI
-from fastapi import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, HTTPException, Request
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = ["http://localhost:3000"],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"]    
+)
 
 #Load the model
 model = pickle.load(open('Benglore_House_Price_model.pickle','rb'))
@@ -23,8 +32,11 @@ class PredictionResponse(BaseModel):
     
     
 @app.get("/")
-def home():
-    return {"message": "Welcome to Bengaluru House Price Prediction API"}
+def home(request: Request):
+    return templates.TemplateResponse(
+        request= request,
+        name = 'index.html'
+    )
 
 @app.post("/predict", response_model = PredictionResponse)
 def predict(data: HouseData):
@@ -38,8 +50,13 @@ def predict(data: HouseData):
         loc_idx = data_columns.index(data.location)
         x[loc_idx] = 1
         
-    prediction = model.predict([x])[0]
-    
+        prediction = model.predict([x])[0]
+    else:
+        raise HTTPException(
+            status_code = 400,
+            detail = f"Location - '{data.location}' is not supported."
+        )
+        
     return {
         "predicted_price": round(prediction, 2),
         "currency":'Lakhs',
