@@ -5,12 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.templating import Jinja2Templates
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"]    
@@ -61,4 +63,10 @@ def predict(data: HouseData):
         "predicted_price": round(prediction, 2),
         "currency":'Lakhs',
         "message": 'Prediction generated successfully.'
+    }
+
+@app.get("/locations")
+def get_locations():
+    return {
+        "locations": sorted(data_columns[3:])
     }

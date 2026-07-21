@@ -1,10 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Bengaluru House Price Prediction</title>
+
+    <meta charset="UTF-8">
+    <title>Bengaluru House Price Predictor</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
 </head>
 <body>
-    <h1>Welcome to Bengaluru House Price Prediction</h1>
-    <p>FastAPI is now serving this webpage!</p>
+
+<div class="container">
+
+    <h1>Bengaluru House Price Predictor</h1>
+
+    <div class="card">
+
+        <label>Location</label>
+
+        <select id="location">
+            <option>Loading...</option>
+        </select>
+
+        <label>Total Area (Sqft)</label>
+
+        <input
+            id="sqft"
+            type="number"
+            placeholder="1000"
+        >
+
+        <label>BHK</label>
+
+        <input
+            id="bhk"
+            type="number"
+            placeholder="2"
+        >
+
+        <label>Bathrooms</label>
+
+        <input
+            id="bath"
+            type="number"
+            placeholder="2"
+        >
+
+        <button onclick="predictPrice()">
+
+            Predict Price
+
+        </button>
+
+        <div id="result"></div>
+
+    </div>
+
+</div>
+
+<script src="/static/script.js"></script>
+
 </body>
 </html>
